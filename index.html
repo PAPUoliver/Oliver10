@@ -1,20 +1,143 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sobre Mí</title>
+    <title>Cubo de Rubik 3D</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        body { font-family: Arial, sans-serif; background: #f3f3f3; margin: 0; padding: 0; }
-        .container { max-width: 600px; margin: 60px auto; background: #fff; box-shadow: 0 2px 8px #ccc; border-radius: 10px; padding: 40px; }
-        h1 { color: #2c3e50; }
-        p { font-size: 1.2em; line-height: 1.6; color: #34495e; }
+        /* Animaciones adicionales para efectos especiales */
+        @keyframes sparkle {
+            0% {
+                opacity: 1;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) rotate(360deg);
+            }
+        }
+        
+        .sparkles {
+            z-index: 9999;
+            animation: sparkle 2s ease-out forwards;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h1>Hola, soy Olive Gonzalez</h1>
-        <p>¡Bienvenido a mi página personal! Aquí puedes poner una breve descripción sobre ti, tus intereses, tu experiencia profesional, hobbies, o cualquier cosa que te gustaría compartir.</p>
+        <div class="cube-container" id="cubeContainer">
+            <div class="cube" id="cube">
+                <!-- Cara frontal (blanca) -->
+                <div class="face front">
+                    <div class="square white"></div>
+                    <div class="square white"></div>
+                    <div class="square white"></div>
+                    <div class="square white"></div>
+                    <div class="square white"></div>
+                    <div class="square white"></div>
+                    <div class="square white"></div>
+                    <div class="square white"></div>
+                    <div class="square white"></div>
+                </div>
+
+                <!-- Cara trasera (amarilla) -->
+                <div class="face back">
+                    <div class="square yellow"></div>
+                    <div class="square yellow"></div>
+                    <div class="square yellow"></div>
+                    <div class="square yellow"></div>
+                    <div class="square yellow"></div>
+                    <div class="square yellow"></div>
+                    <div class="square yellow"></div>
+                    <div class="square yellow"></div>
+                    <div class="square yellow"></div>
+                </div>
+
+                <!-- Cara derecha (roja) -->
+                <div class="face right">
+                    <div class="square red"></div>
+                    <div class="square red"></div>
+                    <div class="square red"></div>
+                    <div class="square red"></div>
+                    <div class="square red"></div>
+                    <div class="square red"></div>
+                    <div class="square red"></div>
+                    <div class="square red"></div>
+                    <div class="square red"></div>
+                </div>
+
+                <!-- Cara izquierda (naranja) -->
+                <div class="face left">
+                    <div class="square orange"></div>
+                    <div class="square orange"></div>
+                    <div class="square orange"></div>
+                    <div class="square orange"></div>
+                    <div class="square orange"></div>
+                    <div class="square orange"></div>
+                    <div class="square orange"></div>
+                    <div class="square orange"></div>
+                    <div class="square orange"></div>
+                </div>
+
+                <!-- Cara superior (azul) -->
+                <div class="face top">
+                    <div class="square blue"></div>
+                    <div class="square blue"></div>
+                    <div class="square blue"></div>
+                    <div class="square blue"></div>
+                    <div class="square blue"></div>
+                    <div class="square blue"></div>
+                    <div class="square blue"></div>
+                    <div class="square blue"></div>
+                    <div class="square blue"></div>
+                </div>
+
+                <!-- Cara inferior (verde) -->
+                <div class="face bottom">
+                    <div class="square green"></div>
+                    <div class="square green"></div>
+                    <div class="square green"></div>
+                    <div class="square green"></div>
+                    <div class="square green"></div>
+                    <div class="square green"></div>
+                    <div class="square green"></div>
+                    <div class="square green"></div>
+                    <div class="square green"></div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="controls">
+        <h3>🎮 Controles</h3>
+        <p style="font-size: 12px; color: #666; margin: 0 0 10px 0;">
+            💡 <strong>Haz clic directamente en las caras del cubo para rotarlas</strong>
+        </p>
+        <button class="btn shuffle" onclick="shuffleCube()">🔀 Mezclar</button>
+        <button class="btn solve" onclick="solveCube(); addParticleEffect()">✨ Resolver</button>
+        <button class="btn" onclick="toggleRotation()">⏸️ Pausar</button>
+        <button class="btn" onclick="resetCubePosition()" style="background: #e74c3c;">🔄 Reset</button>
+    </div>
+
+    <div class="info">
+        <h4>🎯 Cubo de Rubik 3D Real</h4>
+        <p>• <strong>Clic izquierdo:</strong> Rotar cara horario</p>
+        <p>• <strong>Clic derecho:</strong> Rotar cara antihorario</p>
+        <p>• <strong>Shift+Clic:</strong> Rotación inversa</p>
+        <p>• <strong>Teclado:</strong> F,R,U,L,B,D (Shift para inversa)</p>
+        <p>• <strong>Flechas:</strong> Rotar cubo completo</p>
+        <p>• <strong>Espacio:</strong> Mezclar | <strong>Enter:</strong> Resolver</p>
+        <p>• ¡Mecánica real de cubo de Rubik 3x3!</p>
+    </div>
+
+    <script src="script.js"></script>
 </body>
+
 </html>
