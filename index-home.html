@@ -18,6 +18,234 @@
             overflow-x: hidden;
         }
 
+        /* PANTALLA DE CARGA ESTILO VIDEOJUEGO */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeOut 0.5s ease 3s forwards;
+        }
+
+        .game-console {
+            width: 300px;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.5);
+            animation: consoleGlow 2s ease-in-out infinite;
+        }
+
+        .console-screen {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 260px;
+            height: 120px;
+            background: #0a0a0a;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .pixel-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            animation: blink 1s infinite, glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% {
+                transform: translate(-50%, -50%);
+            }
+            92% {
+                transform: translate(-48%, -50%);
+            }
+            94% {
+                transform: translate(-52%, -50%);
+            }
+            96% {
+                transform: translate(-50%, -48%);
+            }
+        }
+
+        .scanline {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 255, 0, 0.3);
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0;
+            }
+            100% {
+                top: 100%;
+            }
+        }
+
+        .loading-bar-container {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #00ff88);
+            width: 0%;
+            animation: loadProgress 3s ease-in-out forwards;
+            box-shadow: 0 0 20px #00ff00;
+        }
+
+        .console-buttons {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .console-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            animation: buttonPulse 1s ease-in-out infinite;
+        }
+
+        .button-a {
+            background: #ff4757;
+            box-shadow: 0 0 15px #ff4757;
+            animation-delay: 0s;
+        }
+
+        .button-b {
+            background: #ffd700;
+            box-shadow: 0 0 15px #ffd700;
+            animation-delay: 0.3s;
+        }
+
+        .loading-text {
+            margin-top: 40px;
+            font-size: 20px;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            animation: textGlow 1.5s ease-in-out infinite;
+        }
+
+        .pixel-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #667eea;
+            animation: floatParticle 3s linear infinite;
+        }
+
+        /* Animaciones */
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        @keyframes consoleGlow {
+            0%, 100% {
+                box-shadow: 0 20px 60px rgba(102, 126, 234, 0.5);
+            }
+            50% {
+                box-shadow: 0 20px 80px rgba(102, 126, 234, 0.8);
+            }
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes textGlow {
+            0%, 100% {
+                text-shadow: 0 0 10px #667eea;
+            }
+            50% {
+                text-shadow: 0 0 20px #667eea, 0 0 30px #764ba2;
+            }
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(50px);
+                opacity: 0;
+            }
+        }
+
+        /* Ocultar contenido hasta que cargue */
+        .main-content {
+            opacity: 0;
+            animation: fadeIn 1s ease 3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
         /* Header */
         header {
             position: fixed;
@@ -280,6 +508,29 @@
     </style>
 </head>
 <body>
+    <!-- PANTALLA DE CARGA ESTILO VIDEOJUEGO -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="pixel-particles" id="particles"></div>
+        
+        <div class="game-console">
+            <div class="console-screen">
+                <div class="scanline"></div>
+                <div class="pixel-text">LOADING...</div>
+            </div>
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+            <div class="console-buttons">
+                <div class="console-button button-a"></div>
+                <div class="console-button button-b"></div>
+            </div>
+        </div>
+        
+        <div class="loading-text">INICIANDO SISTEMA...</div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-content">
     <header>
         <nav>
             <div class="logo">Olive Gonzalez</div>
@@ -371,5 +622,75 @@
     <footer>
         <p>&copy; 2024 Olive Gonzalez. Todos los derechos reservados.</p>
     </footer>
+    </div>
+    <!-- FIN MAIN-CONTENT -->
+
+    <script>
+        // Crear partículas para la pantalla de carga
+        const particlesContainer = document.getElementById('particles');
+        
+        function createLoadingParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            
+            const colors = ['#667eea', '#764ba2', '#00ff00', '#ffd700'];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            particlesContainer.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 5000);
+        }
+
+        // Crear partículas iniciales
+        for (let i = 0; i < 30; i++) {
+            setTimeout(() => createLoadingParticle(), i * 100);
+        }
+
+        // Efecto de píxeles en la consola
+        const pixelText = document.querySelector('.pixel-text');
+        const originalText = 'LOADING...';
+        let charIndex = 0;
+        
+        const typeInterval = setInterval(() => {
+            if (charIndex <= originalText.length) {
+                pixelText.textContent = originalText.substring(0, charIndex) + '█';
+                charIndex++;
+            } else {
+                clearInterval(typeInterval);
+                pixelText.textContent = originalText;
+            }
+        }, 150);
+
+        // Sonidos de carga (simulados con cambios de texto)
+        const loadingTexts = [
+            'INICIANDO SISTEMA...',
+            'CARGANDO RECURSOS...',
+            'PREPARANDO JUEGOS...',
+            'CASI LISTO...',
+            '¡LISTO!'
+        ];
+
+        let textIndex = 0;
+        const loadingTextElement = document.querySelector('.loading-text');
+        
+        const textInterval = setInterval(() => {
+            if (textIndex < loadingTexts.length) {
+                loadingTextElement.textContent = loadingTexts[textIndex];
+                textIndex++;
+            } else {
+                clearInterval(textInterval);
+            }
+        }, 600);
+
+        // Remover pantalla de carga después de 3 segundos
+        setTimeout(() => {
+            document.getElementById('loadingScreen').style.display = 'none';
+        }, 3500);
+    </script>
 </body>
 </html>
