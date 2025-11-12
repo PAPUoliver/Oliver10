@@ -34,82 +34,92 @@
     <div class="container">
         <div class="cube-container" id="cubeContainer">
             <div class="cube" id="cube">
-                <!-- Cara frontal (blanca) -->
+                <!-- NÚCLEO INTERNO DEL CUBO (para que se vea sólido) -->
+                <div class="cube-core">
+                    <div class="core-face core-front"></div>
+                    <div class="core-face core-back"></div>
+                    <div class="core-face core-right"></div>
+                    <div class="core-face core-left"></div>
+                    <div class="core-face core-top"></div>
+                    <div class="core-face core-bottom"></div>
+                </div>
+
+                <!-- Cara frontal (blanca) con profundidad -->
                 <div class="face front">
-                    <div class="square white"></div>
-                    <div class="square white"></div>
-                    <div class="square white"></div>
-                    <div class="square white"></div>
-                    <div class="square white"></div>
-                    <div class="square white"></div>
-                    <div class="square white"></div>
-                    <div class="square white"></div>
-                    <div class="square white"></div>
+                    <div class="square white"><div class="square-depth"></div></div>
+                    <div class="square white"><div class="square-depth"></div></div>
+                    <div class="square white"><div class="square-depth"></div></div>
+                    <div class="square white"><div class="square-depth"></div></div>
+                    <div class="square white"><div class="square-depth"></div></div>
+                    <div class="square white"><div class="square-depth"></div></div>
+                    <div class="square white"><div class="square-depth"></div></div>
+                    <div class="square white"><div class="square-depth"></div></div>
+                    <div class="square white"><div class="square-depth"></div></div>
                 </div>
 
-                <!-- Cara trasera (amarilla) -->
+                <!-- Cara trasera (amarilla) con profundidad -->
                 <div class="face back">
-                    <div class="square yellow"></div>
-                    <div class="square yellow"></div>
-                    <div class="square yellow"></div>
-                    <div class="square yellow"></div>
-                    <div class="square yellow"></div>
-                    <div class="square yellow"></div>
-                    <div class="square yellow"></div>
-                    <div class="square yellow"></div>
-                    <div class="square yellow"></div>
+                    <div class="square yellow"><div class="square-depth"></div></div>
+                    <div class="square yellow"><div class="square-depth"></div></div>
+                    <div class="square yellow"><div class="square-depth"></div></div>
+                    <div class="square yellow"><div class="square-depth"></div></div>
+                    <div class="square yellow"><div class="square-depth"></div></div>
+                    <div class="square yellow"><div class="square-depth"></div></div>
+                    <div class="square yellow"><div class="square-depth"></div></div>
+                    <div class="square yellow"><div class="square-depth"></div></div>
+                    <div class="square yellow"><div class="square-depth"></div></div>
                 </div>
 
-                <!-- Cara derecha (roja) -->
+                <!-- Cara derecha (roja) con profundidad -->
                 <div class="face right">
-                    <div class="square red"></div>
-                    <div class="square red"></div>
-                    <div class="square red"></div>
-                    <div class="square red"></div>
-                    <div class="square red"></div>
-                    <div class="square red"></div>
-                    <div class="square red"></div>
-                    <div class="square red"></div>
-                    <div class="square red"></div>
+                    <div class="square red"><div class="square-depth"></div></div>
+                    <div class="square red"><div class="square-depth"></div></div>
+                    <div class="square red"><div class="square-depth"></div></div>
+                    <div class="square red"><div class="square-depth"></div></div>
+                    <div class="square red"><div class="square-depth"></div></div>
+                    <div class="square red"><div class="square-depth"></div></div>
+                    <div class="square red"><div class="square-depth"></div></div>
+                    <div class="square red"><div class="square-depth"></div></div>
+                    <div class="square red"><div class="square-depth"></div></div>
                 </div>
 
-                <!-- Cara izquierda (naranja) -->
+                <!-- Cara izquierda (naranja) con profundidad -->
                 <div class="face left">
-                    <div class="square orange"></div>
-                    <div class="square orange"></div>
-                    <div class="square orange"></div>
-                    <div class="square orange"></div>
-                    <div class="square orange"></div>
-                    <div class="square orange"></div>
-                    <div class="square orange"></div>
-                    <div class="square orange"></div>
-                    <div class="square orange"></div>
+                    <div class="square orange"><div class="square-depth"></div></div>
+                    <div class="square orange"><div class="square-depth"></div></div>
+                    <div class="square orange"><div class="square-depth"></div></div>
+                    <div class="square orange"><div class="square-depth"></div></div>
+                    <div class="square orange"><div class="square-depth"></div></div>
+                    <div class="square orange"><div class="square-depth"></div></div>
+                    <div class="square orange"><div class="square-depth"></div></div>
+                    <div class="square orange"><div class="square-depth"></div></div>
+                    <div class="square orange"><div class="square-depth"></div></div>
                 </div>
 
-                <!-- Cara superior (azul) -->
+                <!-- Cara superior (azul) con profundidad -->
                 <div class="face top">
-                    <div class="square blue"></div>
-                    <div class="square blue"></div>
-                    <div class="square blue"></div>
-                    <div class="square blue"></div>
-                    <div class="square blue"></div>
-                    <div class="square blue"></div>
-                    <div class="square blue"></div>
-                    <div class="square blue"></div>
-                    <div class="square blue"></div>
+                    <div class="square blue"><div class="square-depth"></div></div>
+                    <div class="square blue"><div class="square-depth"></div></div>
+                    <div class="square blue"><div class="square-depth"></div></div>
+                    <div class="square blue"><div class="square-depth"></div></div>
+                    <div class="square blue"><div class="square-depth"></div></div>
+                    <div class="square blue"><div class="square-depth"></div></div>
+                    <div class="square blue"><div class="square-depth"></div></div>
+                    <div class="square blue"><div class="square-depth"></div></div>
+                    <div class="square blue"><div class="square-depth"></div></div>
                 </div>
 
-                <!-- Cara inferior (verde) -->
+                <!-- Cara inferior (verde) con profundidad -->
                 <div class="face bottom">
-                    <div class="square green"></div>
-                    <div class="square green"></div>
-                    <div class="square green"></div>
-                    <div class="square green"></div>
-                    <div class="square green"></div>
-                    <div class="square green"></div>
-                    <div class="square green"></div>
-                    <div class="square green"></div>
-                    <div class="square green"></div>
+                    <div class="square green"><div class="square-depth"></div></div>
+                    <div class="square green"><div class="square-depth"></div></div>
+                    <div class="square green"><div class="square-depth"></div></div>
+                    <div class="square green"><div class="square-depth"></div></div>
+                    <div class="square green"><div class="square-depth"></div></div>
+                    <div class="square green"><div class="square-depth"></div></div>
+                    <div class="square green"><div class="square-depth"></div></div>
+                    <div class="square green"><div class="square-depth"></div></div>
+                    <div class="square green"><div class="square-depth"></div></div>
                 </div>
             </div>
         </div>
@@ -135,6 +145,19 @@
         <p>• <strong>Flechas:</strong> Rotar cubo completo</p>
         <p>• <strong>Espacio:</strong> Mezclar | <strong>Enter:</strong> Resolver</p>
         <p>• ¡Mecánica real de cubo de Rubik 3x3!</p>
+    </div>
+
+    <!-- Botones de navegación -->
+    <div class="nav-buttons">
+        <a href="index-home.html" class="nav-link home-link">
+            🏠 HOME
+        </a>
+        <a href="home.html" class="nav-link home-link" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
+            🎮 JUEGOS
+        </a>
+        <a href="mario-improved.html" class="nav-link game-link">
+            🍄 MARIO
+        </a>
     </div>
 
     <script src="script.js"></script>
