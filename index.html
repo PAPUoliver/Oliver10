@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>呪術廻戦 | Jujutsu Kaisen</title>
+    <link rel="icon" type="image/png" href="images/jujutsuxd.png">
+ rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* PANTALLA DE CARGA */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gojo-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('images/gojo.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.4);
+            animation: zoomIn 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes zoomIn {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        .gojo-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, 
+                rgba(139, 43, 226, 0.3) 0%,
+                transparent 50%,
+                rgba(255, 20, 147, 0.3) 100%);
+            animation: colorWave 4s ease-in-out infinite;
+        }
+
+        @keyframes colorWave {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        .hollow-purple-container {
+            position: absolute;
+            top: 35%;
+            left: 43%;
+            z-index: 10;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .hollow-purple-container:hover {
+            transform: scale(1.15);
+        }
+
+        .hollow-purple {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center,
+                rgba(220, 120, 255, 1) 0%,
+                rgba(180, 80, 255, 0.95) 20%,
+                rgba(140, 50, 220, 0.9) 40%,
+                rgba(100, 30, 180, 0.8) 60%,
+                rgba(60, 10, 120, 0.6) 80%,
+                rgba(30, 0, 60, 0.3) 100%);
+            box-shadow: 
+                0 0 80px rgba(180, 80, 255, 0.9),
+                0 0 150px rgba(140, 50, 220, 0.7),
+                0 0 250px rgba(100, 30, 180, 0.5),
+                inset 0 0 80px rgba(220, 120, 255, 0.5);
+            animation: purplePulse 2.5s ease-in-out infinite;
+            position: relative;
+        }
+
+        .hollow-purple::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 130%;
+            height: 130%;
+            border-radius: 50%;
+            background: radial-gradient(circle,
+                transparent 40%,
+                rgba(180, 80, 255, 0.3) 50%,
+                transparent 70%);
+            animation: ripple 2s ease-out infinite;
+        }
+
+        @keyframes purplePulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 
+                    0 0 80px rgba(180, 80, 255, 0.9),
+                    0 0 150px rgba(140, 50, 220, 0.7),
+                    0 0 250px rgba(100, 30, 180, 0.5);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 
+                    0 0 100px rgba(180, 80, 255, 1),
+                    0 0 200px rgba(140, 50, 220, 0.9),
+                    0 0 350px rgba(100, 30, 180, 0.7);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* Explosión TNT */
+        .tnt-particle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+            pointer-events: none;
+        }
+
+        .explosion-flash {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, 
+                rgba(255, 255, 255, 1) 0%,
+                rgba(255, 200, 100, 0.9) 20%,
+                rgba(255, 100, 0, 0.7) 40%,
+                transparent 70%);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        .explosion-flash.active {
+            animation: tntFlash 0.6s ease-out forwards;
+        }
+
+        @keyframes tntFlash {
+            0% { width: 0; height: 0; opacity: 1; }
+            30% { width: 800px; height: 800px; opacity: 1; }
+            100% { width: 1200px; height: 1200px; opacity: 0; }
+        }
+
+        .loading-screen.exploding {
+            animation: screenShake 0.5s ease-out;
+        }
+
+        @keyframes screenShake {
+            0%, 100% { transform: translate(0, 0); }
+            10% { transform: translate(-20px, 10px); }
+            20% { transform: translate(20px, -10px); }
+            30% { transform: translate(-15px, 15px); }
+            40% { transform: translate(15px, -15px); }
+            50% { transform: translate(-10px, 10px); }
+            60% { transform: translate(10px, -10px); }
+            70% { transform: translate(-5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            90% { transform: translate(-2px, 2px); }
+        }
+
+        /* CONTENIDO PRINCIPAL */
+        .main-content {
+            display: none;
+            opacity: 0;
+        }
+
+        .main-content.active {
+            display: block;
+            animation: fadeIn 1.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-image: url('images/menu.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(139, 43, 226, 0.3);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(139, 43, 226, 0.8), 0 0 40px rgba(255, 20, 147, 0.6);
+            letter-spacing: 3px;
+        }
+
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .language-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .lang-btn {
+            background: rgba(139, 43, 226, 0.2);
+            border: 2px solid #8B2BE2;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .lang-btn:hover {
+            background: rgba(139, 43, 226, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #8B2BE2, #FF1493);
+            border-color: #FF1493;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
+        }
+
+        /* HERO */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            filter: brightness(0.5);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(139, 43, 226, 0.3));
+            z-index: 1;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 10;
+            max-width: 900px;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 96px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fff, #8B2BE2, #FF1493, #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .hero-subtitle {
+            font-size: 28px;
+            color: #fff;
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        }
+
+        /* SECCIÓN CON IMAGEN */
+        .story-section {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .story-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(139,43,226,0.1) 100%);
+            z-index: 1;
+            transition: background 0.5s ease;
+        }
+
+        .story-section:hover::before {
+            background: linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(139,43,226,0.3) 100%);
+        }
+
+        .story-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            filter: brightness(0.8);
+            transition: all 0.5s ease;
+        }
+
+        .story-section:hover .story-bg {
+            filter: brightness(0.4);
+            transform: scale(1.02);
+        }
+
+        .story-bg video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+
+        .story-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+            pointer-events: none;
+        }
+
+        .story-section:hover .story-content {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .story-text h2 {
+            font-size: 42px;
+            color: #fff;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            text-shadow: 3px 3px 0px #8B2BE2, 6px 6px 0px rgba(0,0,0,0.5);
+            letter-spacing: 3px;
+            opacity: 0;
+        }
+
+        .story-section:hover .story-text h2 {
+            animation: typewriter 2s steps(40) forwards;
+        }
+
+        @keyframes typewriter {
+            from { 
+                opacity: 0;
+                width: 0;
+            }
+            to { 
+                opacity: 1;
+                width: 100%;
+            }
+        }
+
+        .story-text p {
+            font-size: 17px;
+            line-height: 1.7;
+            color: #e0e0e0;
+            margin-bottom: 18px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .story-text .highlight {
+            color: #FF1493;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255,20,147,0.5);
+        }
+
+        .story-image-card {
+            position: relative;
+            height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(139,43,226,0.4);
+            transition: all 0.4s ease;
+        }
+
+        .story-image-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 30px 80px rgba(255,20,147,0.6);
+        }
+
+        .story-image-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .story-image-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .story-image-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(139,43,226,0.3), rgba(255,20,147,0.3));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .story-image-card:hover::after {
+            opacity: 1;
+        }
+
+        /* BATALLA ÉPICA */
+        .battle-section {
+            position: relative;
+            min-height: 120vh;
+            background: #000;
+            padding: 120px 0;
+            overflow: hidden;
+        }
+
+        .battle-video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            transition: filter 0.5s ease;
+        }
+
+        .battle-video-bg video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.6);
+            transition: filter 0.5s ease;
+        }
+
+        .battle-section:hover .battle-video-bg video {
+            filter: brightness(0.3);
+        }
+
+        .battle-title,
+        .battle-grid {
+            position: relative;
+            z-index: 1;
+        }
+
+        .battle-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.2);
+            z-index: 0;
+            transition: background 0.5s ease;
+        }
+
+        .battle-section:hover::before {
+            background: rgba(0,0,0,0.6);
+        }
+
+        .battle-title {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .battle-title {
+            opacity: 0.3;
+            transition: opacity 0.5s ease;
+        }
+
+        .battle-section:hover .battle-title {
+            opacity: 1;
+        }
+
+        .battle-title h2 {
+            font-size: 72px;
+            background: linear-gradient(90deg, #8B2BE2, #FF1493, #FFD700, #FF1493, #8B2BE2);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shine 3s linear infinite;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+        }
+
+        .battle-title p {
+            font-size: 22px;
+            color: #ccc;
+            font-weight: 300;
+        }
+
+        .battle-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 50px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .battle-section:hover .battle-grid {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .battle-card {
+            position: relative;
+            height: 450px;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .battle-card:hover {
+            transform: translateY(-20px);
+        }
+
+        .battle-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .battle-card:hover img {
+            transform: scale(1.2);
+        }
+
+        .battle-card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px;
+            background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .battle-card:hover .battle-card-overlay {
+            transform: translateY(0);
+        }
+
+        .battle-card-overlay h3 {
+            font-size: 32px;
+            color: #8B2BE2;
+            margin-bottom: 10px;
+            font-weight: 900;
+        }
+
+        .battle-card-overlay p {
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+
+
+        /* ABSOLUTE CINEMA */
+        .cinema-section {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .cinema-section.visible {
+            opacity: 1;
+        }
+
+        .cinema-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #000;
+            border-top: 1px solid rgba(139, 43, 226, 0.3);
+            padding: 60px 50px;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 36px;
+            font-weight: 900;
+            color: #8B2BE2;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 48px; }
+            .hero-subtitle { font-size: 20px; }
+            
+            .story-content {
+                grid-template-columns: 1fr;
+                padding: 60px 30px;
+                gap: 40px;
+            }
+            
+            .story-text h2 {
+                font-size: 36px;
+            }
+            
+            .story-text p {
+                font-size: 16px;
+            }
+            
+            .story-image-card {
+                height: 350px;
+            }
+
+            .story-content {
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
+            .battle-grid {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .battle-title {
+                opacity: 1;
+            }
+            
+            .battle-title h2 {
+                font-size: 42px;
+            }
+            
+            .battle-grid {
+                grid-template-columns: 1fr;
+                padding: 0 20px;
+            }
+            
+            .battle-card {
+                height: 400px;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                padding: 0 20px;
+            }
+            
+
+            
+            nav {
+                padding: 20px 30px;
+            }
+            
+            .logo {
+                font-size: 24px;
+            }
+            
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+            
+            .language-selector {
+                gap: 5px;
+            }
+            
+            .nav-menu {
+                gap: 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- PANTALLA DE CARGA -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="gojo-bg"></div>
+        <div class="hollow-purple-container" onclick="enterSite()">
+            <div class="hollow-purple"></div>
+        </div>
+    </div>
+    <div class="explosion-flash" id="explosionFlash"></div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="main-content" id="mainContent">
+        <header>
+            <nav>
+                <div class="logo">呪術廻戦</div>
+                <div class="language-selector">
+                    <button class="lang-btn active" data-lang="es">🇪🇸 ES</button>
+                    <button class="lang-btn" data-lang="en">🇬🇧 EN</button>
+                </div>
+            </nav>
+        </header>
+
+        <section class="hero" id="home">
+            <video class="hero-video" autoplay muted loop playsinline>
+                <source src="videos/portada.mp4" type="video/mp4">
+            </video>
+            <div class="hero-content">
+                <h1>JUJUTSU KAISEN</h1>
+                <p class="hero-subtitle" data-es="呪術廻戦 - La batalla contra las maldiciones" data-en="呪術廻戦 - The battle against curses">呪術廻戦 - La batalla contra las maldiciones</p>
+            </div>
+        </section>
+
+        <!-- GOJO - EL MÁS FUERTE -->
+        <section class="story-section" id="historia">
+            <div class="story-bg">
+                <video autoplay muted loop playsinline>
+                    <source src="videos/fondo.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="story-content">
+                <div class="story-text">
+                    <h2 class="minecraft-text" data-es="El más fuerte..." data-en="The strongest...">El más fuerte...</h2>
+                    <p data-es="El hechicero más poderoso de la era moderna. Profesor en la Escuela Técnica de Hechicería de Tokio, Gojo posee los legendarios Six Eyes y la técnica Limitless." data-en="The most powerful sorcerer of the modern era. Teacher at Tokyo Jujutsu High, Gojo possesses the legendary Six Eyes and Limitless technique.">
+                        <span class="highlight">El hechicero más poderoso de la era moderna.</span> 
+                        Profesor en la Escuela Técnica de Hechicería de Tokio, Gojo posee los legendarios Six Eyes y la técnica Limitless.
+                    </p>
+                    <p data-es="Su poder es tan abrumador que puede manipular el espacio a nivel atómico. Su técnica definitiva, Hollow Purple, combina atracción y repulsión infinitas para borrar todo a su paso." data-en="His power is so overwhelming that he can manipulate space at the atomic level. His ultimate technique, Hollow Purple, combines infinite attraction and repulsion to erase everything in its path.">
+                        Su poder es tan abrumador que puede manipular el espacio a nivel atómico. 
+                        Su técnica definitiva, <span class="highlight">Hollow Purple</span>, combina atracción y repulsión infinitas 
+                        para borrar todo a su paso.
+                    </p>
+                </div>
+                <div class="story-image-card">
+                    <img src="images/gojoxd.jpg" alt="Satoru Gojo">
+                </div>
+            </div>
+        </section>
+
+        <!-- SUKUNA - REY DE LAS MALDICIONES -->
+        <section class="story-section">
+            <div class="story-bg">
+                <video autoplay muted loop playsinline>
+                    <source src="videos/sukumbia.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="story-content">
+                <div class="story-image-card">
+                    <img src="images/sukuna.jpg" alt="Ryomen Sukuna">
+                </div>
+                <div class="story-text">
+                    <h2 class="minecraft-text" data-es="Rey de Maldiciones..." data-en="King of Curses...">Rey de Maldiciones...</h2>
+                    <p data-es="El Rey de las Maldiciones. La maldición más poderosa y temida de toda la historia. Con cuatro brazos, dos caras y un poder devastador que aterroriza incluso a los hechiceros más fuertes." data-en="The King of Curses. The most powerful and feared curse in all of history. With four arms, two faces and devastating power that terrifies even the strongest sorcerers.">
+                        <span class="highlight">El Rey de las Maldiciones.</span> 
+                        La maldición más poderosa y temida de toda la historia. Con cuatro brazos, 
+                        dos caras y un poder devastador que aterroriza incluso a los hechiceros más fuertes.
+                    </p>
+                    <p data-es="Sus técnicas de corte, Cleave y Dismantle, pueden desgarrar cualquier cosa con precisión quirúrgica." data-en="His cutting techniques, Cleave and Dismantle, can tear through anything with surgical precision.">
+                        Sus técnicas de corte, <span class="highlight">Cleave y Dismantle</span>, 
+                        pueden desgarrar cualquier cosa con precisión quirúrgica.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- BATALLA ÉPICA -->
+        <section class="battle-section" id="batalla">
+            <div class="battle-video-bg">
+                <video autoplay muted loop playsinline>
+                    <source src="videos/gojo y sukuna.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="battle-title">
+                <h2 class="minecraft-text" data-es="La Batalla Épica..." data-en="The Epic Battle...">La Batalla Épica...</h2>
+                <p data-es="El enfrentamiento que definió el destino del mundo" data-en="The confrontation that defined the fate of the world">El enfrentamiento que definió el destino del mundo</p>
+            </div>
+            <div class="battle-grid">
+                <div class="battle-card">
+                    <img src="images/xs2.jpg" alt="Batalla Épica">
+                    <div class="battle-card-overlay">
+                        <h3 data-es="El Enfrentamiento" data-en="The Confrontation">El Enfrentamiento</h3>
+                        <p data-es="La batalla más esperada que definió el destino del mundo" data-en="The most anticipated battle that defined the fate of the world">La batalla más esperada que definió el destino del mundo</p>
+                    </div>
+                </div>
+                <div class="battle-card">
+                    <img src="images/xd.jpg" alt="Momento Épico">
+                    <div class="battle-card-overlay">
+                        <h3 data-es="Momento Legendario" data-en="Legendary Moment">Momento Legendario</h3>
+                        <p data-es="Un instante que quedará grabado en la historia" data-en="A moment that will be etched in history">Un instante que quedará grabado en la historia</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PERSONAJES LEGENDARIOS -->
+        <section class="story-section">
+            <div class="story-bg" style="background-image: url('images/geto.jpg');"></div>
+            <div class="story-content">
+                <div class="story-text">
+                    <h2 class="minecraft-text" data-es="El amigo perdido..." data-en="The lost friend...">El amigo perdido...</h2>
+                    <p data-es="El mejor amigo convertido en enemigo. Geto fue alguna vez el compañero más cercano de Gojo, pero su visión del mundo cambió drásticamente." data-en="Best friend turned enemy. Geto was once Gojo's closest companion, but his worldview changed drastically.">
+                        <span class="highlight">El mejor amigo convertido en enemigo.</span> 
+                        Geto fue alguna vez el compañero más cercano de Gojo, pero su visión del mundo 
+                        cambió drásticamente.
+                    </p>
+                    <p data-es="Su técnica de Manipulación de Maldiciones le permite controlar espíritus malditos, creando un ejército bajo su mando. Su caída marcó uno de los momentos más trágicos." data-en="His Curse Manipulation technique allows him to control cursed spirits, creating an army under his command. His fall marked one of the most tragic moments.">
+                        Su técnica de Manipulación de Maldiciones le permite controlar espíritus malditos, 
+                        creando un ejército bajo su mando. Su caída marcó uno de los momentos más trágicos.
+                    </p>
+                </div>
+                <div class="story-image-card">
+                    <img src="images/geto.jpg" alt="Suguru Geto">
+                </div>
+            </div>
+        </section>
+
+        <!-- TOJI -->
+        <section class="story-section">
+            <div class="story-bg">
+                <video autoplay muted loop playsinline>
+                    <source src="videos/toji.mp4" type="video/mp4">
+                </video>
+            </div>
+            <div class="story-content">
+                <div class="story-image-card">
+                    <img src="images/toji.jpg" alt="Toji Fushiguro">
+                </div>
+                <div class="story-text">
+                    <h2 class="minecraft-text" data-es="El asesino..." data-en="The assassin...">El asesino...</h2>
+                    <p data-es="El Asesino de Hechiceros. Toji no posee energía maldita, pero eso lo convierte en el guerrero perfecto. Su Restricción Celestial le otorga fuerza física sobrehumana." data-en="The Sorcerer Killer. Toji possesses no cursed energy, but that makes him the perfect warrior. His Heavenly Restriction grants him superhuman physical strength.">
+                        <span class="highlight">El Asesino de Hechiceros.</span> 
+                        Toji no posee energía maldita, pero eso lo convierte en el guerrero perfecto. 
+                        Su Restricción Celestial le otorga fuerza física sobrehumana.
+                    </p>
+                    <p data-es="Fue el único hombre capaz de derrotar a Satoru Gojo en su juventud, demostrando que incluso el más fuerte tiene debilidades." data-en="He was the only man capable of defeating Satoru Gojo in his youth, proving that even the strongest has weaknesses.">
+                        Fue el único hombre capaz de derrotar a Satoru Gojo en su juventud, 
+                        demostrando que incluso el más fuerte tiene debilidades.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABSOLUTE CINEMA -->
+        <section class="cinema-section" id="cinema">
+            <img src="images/olasz.jpg" alt="Absolute Cinema" class="cinema-image">
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-logo">呪術廻戦</div>
+                <p data-es="Sitio fan no oficial dedicado a Jujutsu Kaisen" data-en="Unofficial fan site dedicated to Jujutsu Kaisen">Sitio fan no oficial dedicado a Jujutsu Kaisen</p>
+                <p>Manga: Gege Akutami | Anime: MAPPA Studio</p>
+                <p>&copy; 2024 Jujutsu Kaisen Wiki</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function enterSite() {
+            const loading = document.getElementById('loadingScreen');
+            const content = document.getElementById('mainContent');
+            const explosionFlash = document.getElementById('explosionFlash');
+            const purpleContainer = document.querySelector('.hollow-purple-container');
+            
+            purpleContainer.style.opacity = '0';
+            createTNTExplosion();
+            explosionFlash.classList.add('active');
+            loading.classList.add('exploding');
+            
+            setTimeout(() => {
+                loading.style.transition = 'opacity 1s ease';
+                loading.style.opacity = '0';
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    content.classList.add('active');
+                }, 1000);
+            }, 600);
+        }
+
+        function createTNTExplosion() {
+            const loading = document.getElementById('loadingScreen');
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            for (let i = 0; i < 80; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'tnt-particle';
+                const colors = ['#FF6B00', '#FF8C00', '#FFA500', '#FFD700', '#FFFF00', '#FFFFFF', '#CCCCCC', '#999999'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.boxShadow = `0 0 10px ${particle.style.background}`;
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                loading.appendChild(particle);
+                
+                const angle = (Math.PI * 2 * i) / 80 + (Math.random() - 0.5) * 0.8;
+                const velocity = 300 + Math.random() * 450;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+                
+                let posX = centerX, posY = centerY, opacity = 1;
+                let scale = 1.5 + Math.random() * 1.5, rotation = Math.random() * 360;
+                let gravity = 500, time = 0;
+                
+                const animateParticle = () => {
+                    time += 0.016;
+                    posX += vx * 0.016;
+                    posY += vy * 0.016 + gravity * time * 0.016;
+                    opacity -= 0.016 * 1.2;
+                    scale -= 0.016 * 1.2;
+                    rotation += 8;
+                    particle.style.left = posX + 'px';
+                    particle.style.top = posY + 'px';
+                    particle.style.opacity = opacity;
+                    particle.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
+                    if (opacity > 0 && time < 1.2) requestAnimationFrame(animateParticle);
+                    else particle.remove();
+                };
+                requestAnimationFrame(animateParticle);
+            }
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Mostrar "Absolute Cinema" después de la sección de Toji
+        const cinemaSection = document.querySelector('.cinema-section');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    cinemaSection.classList.add('visible');
+                } else {
+                    cinemaSection.classList.remove('visible');
+                }
+            });
+        }, {
+            threshold: 0.3
+        });
+        
+        observer.observe(cinemaSection);
+
+        // Sistema de traducción mejorado
+        let currentLang = 'es';
+        
+        const translations = {
+            es: {
+                heroSubtitle: '呪術廻戦 - La batalla contra las maldiciones',
+                gojo: {
+                    title: 'El más fuerte...',
+                    p1: 'El hechicero más poderoso de la era moderna. Profesor en la Escuela Técnica de Hechicería de Tokio, Gojo posee los legendarios Six Eyes y la técnica Limitless.',
+                    p2: 'Su poder es tan abrumador que puede manipular el espacio a nivel atómico. Su técnica definitiva, Hollow Purple, combina atracción y repulsión infinitas para borrar todo a su paso.'
+                },
+                sukuna: {
+                    title: 'Rey de Maldiciones...',
+                    p1: 'El Rey de las Maldiciones. La maldición más poderosa y temida de toda la historia. Con cuatro brazos, dos caras y un poder devastador que aterroriza incluso a los hechiceros más fuertes.',
+                    p2: 'Sus técnicas de corte, Cleave y Dismantle, pueden desgarrar cualquier cosa con precisión quirúrgica.'
+                },
+                battle: {
+                    title: 'La Batalla Épica...',
+                    subtitle: 'El enfrentamiento que definió el destino del mundo',
+                    card1Title: 'El Enfrentamiento',
+                    card1Text: 'La batalla más esperada que definió el destino del mundo',
+                    card2Title: 'Momento Legendario',
+                    card2Text: 'Un instante que quedará grabado en la historia'
+                },
+                geto: {
+                    title: 'El amigo perdido...',
+                    p1: 'El mejor amigo convertido en enemigo. Geto fue alguna vez el compañero más cercano de Gojo, pero su visión del mundo cambió drásticamente.',
+                    p2: 'Su técnica de Manipulación de Maldiciones le permite controlar espíritus malditos, creando un ejército bajo su mando. Su caída marcó uno de los momentos más trágicos.'
+                },
+                toji: {
+                    title: 'El asesino...',
+                    p1: 'El Asesino de Hechiceros. Toji no posee energía maldita, pero eso lo convierte en el guerrero perfecto. Su Restricción Celestial le otorga fuerza física sobrehumana.',
+                    p2: 'Fue el único hombre capaz de derrotar a Satoru Gojo en su juventud, demostrando que incluso el más fuerte tiene debilidades.'
+                },
+                footer: 'Sitio fan no oficial dedicado a Jujutsu Kaisen'
+            },
+            en: {
+                heroSubtitle: '呪術廻戦 - The battle against curses',
+                gojo: {
+                    title: 'The strongest...',
+                    p1: 'The most powerful sorcerer of the modern era. Teacher at Tokyo Jujutsu High, Gojo possesses the legendary Six Eyes and Limitless technique.',
+                    p2: 'His power is so overwhelming that he can manipulate space at the atomic level. His ultimate technique, Hollow Purple, combines infinite attraction and repulsion to erase everything in its path.'
+                },
+                sukuna: {
+                    title: 'King of Curses...',
+                    p1: 'The King of Curses. The most powerful and feared curse in all of history. With four arms, two faces and devastating power that terrifies even the strongest sorcerers.',
+                    p2: 'His cutting techniques, Cleave and Dismantle, can tear through anything with surgical precision.'
+                },
+                battle: {
+                    title: 'The Epic Battle...',
+                    subtitle: 'The confrontation that defined the fate of the world',
+                    card1Title: 'The Confrontation',
+                    card1Text: 'The most anticipated battle that defined the fate of the world',
+                    card2Title: 'Legendary Moment',
+                    card2Text: 'A moment that will be etched in history'
+                },
+                geto: {
+                    title: 'The lost friend...',
+                    p1: 'Best friend turned enemy. Geto was once Gojo\'s closest companion, but his worldview changed drastically.',
+                    p2: 'His Curse Manipulation technique allows him to control cursed spirits, creating an army under his command. His fall marked one of the most tragic moments.'
+                },
+                toji: {
+                    title: 'The assassin...',
+                    p1: 'The Sorcerer Killer. Toji possesses no cursed energy, but that makes him the perfect warrior. His Heavenly Restriction grants him superhuman physical strength.',
+                    p2: 'He was the only man capable of defeating Satoru Gojo in his youth, proving that even the strongest has weaknesses.'
+                },
+                footer: 'Unofficial fan site dedicated to Jujutsu Kaisen'
+            }
+        };
+        
+        function translatePage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+            
+            // Actualizar botones
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.lang === lang) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Traducir elementos específicos
+            document.querySelector('.hero-subtitle').textContent = t.heroSubtitle;
+            
+            // Gojo
+            const gojoSection = document.querySelectorAll('.story-section')[0];
+            gojoSection.querySelector('h2').textContent = t.gojo.title;
+            const gojoParagraphs = gojoSection.querySelectorAll('p');
+            gojoParagraphs[0].innerHTML = t.gojo.p1.replace('Six Eyes', '<span class="highlight">Six Eyes</span>').replace('Limitless', '<span class="highlight">Limitless</span>');
+            gojoParagraphs[1].innerHTML = t.gojo.p2.replace('Hollow Purple', '<span class="highlight">Hollow Purple</span>');
+            
+            // Sukuna
+            const sukunaSection = document.querySelectorAll('.story-section')[1];
+            sukunaSection.querySelector('h2').textContent = t.sukuna.title;
+            const sukunaParagraphs = sukunaSection.querySelectorAll('p');
+            sukunaParagraphs[0].innerHTML = t.sukuna.p1.replace(lang === 'es' ? 'El Rey de las Maldiciones' : 'The King of Curses', `<span class="highlight">${lang === 'es' ? 'El Rey de las Maldiciones' : 'The King of Curses'}</span>`);
+            sukunaParagraphs[1].innerHTML = t.sukuna.p2.replace('Cleave', '<span class="highlight">Cleave</span>').replace('Dismantle', '<span class="highlight">Dismantle</span>');
+            
+            // Batalla
+            document.querySelector('.battle-title h2').textContent = t.battle.title;
+            document.querySelector('.battle-title p').textContent = t.battle.subtitle;
+            const battleCards = document.querySelectorAll('.battle-card-overlay');
+            battleCards[0].querySelector('h3').textContent = t.battle.card1Title;
+            battleCards[0].querySelector('p').textContent = t.battle.card1Text;
+            battleCards[1].querySelector('h3').textContent = t.battle.card2Title;
+            battleCards[1].querySelector('p').textContent = t.battle.card2Text;
+            
+            // Geto
+            const getoSection = document.querySelectorAll('.story-section')[2];
+            getoSection.querySelector('h2').textContent = t.geto.title;
+            const getoParagraphs = getoSection.querySelectorAll('p');
+            getoParagraphs[0].innerHTML = t.geto.p1.replace(lang === 'es' ? 'El mejor amigo convertido en enemigo' : 'Best friend turned enemy', `<span class="highlight">${lang === 'es' ? 'El mejor amigo convertido en enemigo' : 'Best friend turned enemy'}</span>`);
+            getoParagraphs[1].innerHTML = t.geto.p2.replace(lang === 'es' ? 'Manipulación de Maldiciones' : 'Curse Manipulation', `<span class="highlight">${lang === 'es' ? 'Manipulación de Maldiciones' : 'Curse Manipulation'}</span>`);
+            
+            // Toji
+            const tojiSection = document.querySelectorAll('.story-section')[3];
+            tojiSection.querySelector('h2').textContent = t.toji.title;
+            const tojiParagraphs = tojiSection.querySelectorAll('p');
+            tojiParagraphs[0].innerHTML = t.toji.p1.replace(lang === 'es' ? 'El Asesino de Hechiceros' : 'The Sorcerer Killer', `<span class="highlight">${lang === 'es' ? 'El Asesino de Hechiceros' : 'The Sorcerer Killer'}</span>`).replace(lang === 'es' ? 'Restricción Celestial' : 'Heavenly Restriction', `<span class="highlight">${lang === 'es' ? 'Restricción Celestial' : 'Heavenly Restriction'}</span>`);
+            tojiParagraphs[1].textContent = t.toji.p2;
+            
+            // Footer
+            document.querySelector('footer p').textContent = t.footer;
+        }
+        
+        // Event listeners para los botones de idioma
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                translatePage(btn.dataset.lang);
+            });
+        });
+    </script>
+</body>
+</html>
